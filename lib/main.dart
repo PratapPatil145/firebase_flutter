@@ -3,18 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase_2/Screen/registation.dart';
 
 import 'Screen/login.dart';
- 
-Future<void> main() async { 
-   WidgetsFlutterBinding.ensureInitialized();
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  
-  runApp(const MyApp());}
- 
+
+  runApp(const MyApp());
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
- 
+
   static const String _title = 'Sample App';
- 
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,9 +23,8 @@ class MyApp extends StatelessWidget {
       title: _title,
       home: Scaffold(
         appBar: AppBar(title: const Text(_title)),
-        body:MyStatefulWidget(),
+        body: MyStatefulWidget(),
       ),
     );
   }
 }
- 

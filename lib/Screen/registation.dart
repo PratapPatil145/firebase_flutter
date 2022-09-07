@@ -11,13 +11,14 @@ class Registation extends StatefulWidget {
 }
 
 class _RegistationState extends State<Registation> {
+  bool loading = false;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswardControlller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     body: Padding(
+      body: Padding(
           padding: const EdgeInsets.all(10),
           child: ListView(
             children: <Widget>[
@@ -63,7 +64,7 @@ class _RegistationState extends State<Registation> {
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                 child: TextField(
                   obscureText: true,
-                  controller: passwordController,
+                  controller: confirmPasswardControlller,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: ' Confirm Password',
@@ -76,34 +77,51 @@ class _RegistationState extends State<Registation> {
               //   },
               //   child: const Text('Forgot Password',),
               // ),
-              Container(
-                  margin: EdgeInsets.only(top: 20),
-                  height: 50,
-                  padding: const EdgeInsets.fromLTRB(010, 0, 10, 0),
-                  child: ElevatedButton(
-                    child: const Text(
-                      'Sign In',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    onPressed: () async {
-                      if (emailController.text == "" ||
-                          passwordController.text == "") {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text("All field are Required !"),
-                          backgroundColor: Colors.red,
-                        ));
-                      } else {
-                        User? result = await AuthService().register(
-                            emailController.text, passwordController.text);
-                        if (result != null) {
-                          print("success");
-                          print(result.email);
-                        }
-                      }
-                      // print(nameController.text);
-                      // print(passwordController.text);
-                    },
-                  )),
+              loading
+                  ? CircularProgressIndicator()
+                  : Container(
+                      margin: EdgeInsets.only(top: 20),
+                      height: 50,
+                      padding: const EdgeInsets.fromLTRB(010, 0, 10, 0),
+                      child: ElevatedButton(
+                        child: const Text(
+                          'Sign In',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        onPressed: () async {
+                          setState(() {
+                            loading = true;
+                          });
+                          if (emailController.text == "" ||
+                              passwordController.text == "") {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("All field are Required !"),
+                              backgroundColor: Colors.red,
+                            ));
+                          } else if (passwordController.text !=
+                              confirmPasswardControlller.text) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                              content: Text("Password does not matchh"),
+                              backgroundColor: Colors.red,
+                            ));
+                          } else {
+                            User? result = await AuthService().register(
+                                emailController.text,
+                                passwordController.text,
+                                context);
+                            if (result != null) {
+                              print("success");
+                              print(result.email);
+                            }
+                          }
+                          // print(nameController.text);
+                          //
+                          // print(passwordController.text);
+                          setState(() {
+                            loading = false;
+                          });
+                        },
+                      )),
               Row(
                 children: <Widget>[
                   const Text('Already have an Account?'),
@@ -115,10 +133,9 @@ class _RegistationState extends State<Registation> {
                     onPressed: () {
                       //signup screen
                       Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MyStatefulWidget())
-                      );
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MyStatefulWidget()));
                     },
                   )
                 ],

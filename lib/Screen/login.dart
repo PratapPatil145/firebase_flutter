@@ -3,18 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase_2/Screen/registation.dart';
 import 'package:flutter_firebase_2/sevices/auth_service.dart';
 
-
 class MyStatefulWidget extends StatefulWidget {
   const MyStatefulWidget({Key? key}) : super(key: key);
- 
+
   @override
   State<MyStatefulWidget> createState() => _MyStatefulWidgetState();
 }
- 
+
 class _MyStatefulWidgetState extends State<MyStatefulWidget> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
- 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +63,9 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                 onPressed: () {
                   //forgot password screen
                 },
-                child: const Text('Forgot Password',),
+                child: const Text(
+                  'Forgot Password',
+                ),
               ),
               Container(
                   height: 50,
@@ -72,15 +73,18 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                   child: ElevatedButton(
                     child: const Text('Login'),
                     onPressed: () async {
-    
-    
-                      if(emailController.text=="" || passwordController.text==""){
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content:Text("All field are Required !"),backgroundColor: Colors.red, ));
-    
-                      }
-                      else {
-                        User? result = await AuthService().register(emailController.text, passwordController.text);
-                        if (result != null){
+                      if (emailController.text == "" ||
+                          passwordController.text == "") {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text("All field are Required !"),
+                          backgroundColor: Colors.red,
+                        ));
+                      } else {
+                        User? result = await AuthService().login(
+                            emailController.text,
+                            passwordController.text,
+                            context);
+                        if (result != null) {
                           print("success");
                           print(result.email);
                         }
@@ -88,8 +92,7 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                       // print(nameController.text);
                       // print(passwordController.text);
                     },
-                  )
-              ),
+                  )),
               Row(
                 children: <Widget>[
                   const Text('Does not have account?'),
@@ -101,11 +104,10 @@ class _MyStatefulWidgetState extends State<MyStatefulWidget> {
                     onPressed: () {
                       //signup scre
                       //en
-                       Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Registation())
-                      );
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Registation()));
                     },
                   )
                 ],
